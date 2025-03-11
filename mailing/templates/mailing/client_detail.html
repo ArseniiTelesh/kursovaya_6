@@ -1,0 +1,31 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <p class="card-text"><strong>Имя:</strong> {{ object.name|title }}</p>
+              <p class="card-text"><strong>Email:</strong> {{ object.email }}</p>
+              <p class="card-text"><strong>Комментарии:</strong> {{ object.comment }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn">
+                  <a class="btn btn-primary" href="{% url 'mailing:client_list_page' %}" role="button">
+                    Вернуться</a>
+                  <a class="btn btn-success" href="{% url 'mailing:client_update_page' object.pk %}"
+                     role="button">Редактировать</a>
+                  <a class="btn btn-danger" href="{% url 'mailing:client_delete_page' object.pk %}"
+                     role="button">Удалить</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

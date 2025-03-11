@@ -1,0 +1,23 @@
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <h5 class="my-0 mr-md-auto font-weight-normal">Mailing:
+        {% if title %}
+        - {{title}}
+        {% endif %}
+    </h5>
+    <nav class="ms-5">
+        <a class="p-2 btn btn-outline-primary" href="/">Главная</a>
+
+
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailing:client_list_page' %}">Пользователи</a>
+
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailing:message_list_page' %}">Сообщения</a>
+
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailing:mailing_list_page' %}">Рассылки</a>
+
+        <a class="p-2 btn btn-outline-primary" href="{% url 'mailing:mailing_attempt_list_page' %}">Статистика</a>
+
+        <a class="p-2 btn btn-outline-primary" href="/admin">Админка</a>
+
+
+    </nav>
+</div>

@@ -1,0 +1,50 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-1 pb-md-1 mx-auto text-center">
+    <h6 class="display-1">Сервис рассылок</h6>
+</div>
+<div class="container col-10">
+    <div class="card-body">
+        <div class="col-12 text-center">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Количество рассылок</th>
+                    <th scope="col">Количество активных рассылок</th>
+                    <th scope="col">количество уникальных клиентов для рассылок</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{all_mailings}}</td>
+                    <td>{{active_mailings}}</td>
+                    <td>{{active_clients}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for object in random_blogs %}
+            <div class="col">
+                <div class="card shadow-sm">
+                    <img src="{{ object.preview }}">
+                    <div class="card-body">
+                        <p class="card-text">{{ object.title | title }}</p>
+                        <p class="card-text">Содержимое статьи: {{ object.content | title }}</p>
+                        <p class="card-text">Дата создания: {{ object.created_at }}</p>
+                        <p class="card-text">Количество просмотров: {{ object.number_views }}</p>
+                    </div>
+                    <div class="btn">
+                    <a class="btn btn-primary" href="{% url 'blog:blog_detail' object.pk %}" role="button">Посмотреть</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
