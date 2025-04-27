@@ -5,6 +5,7 @@ from mailing.models import Client, Message, Mailing
 
 class StyleFormMixin:
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if hasattr(field.widget, 'attrs') and not isinstance(field.widget, forms.CheckboxInput):
@@ -23,21 +24,37 @@ class ClientForm(StyleFormMixin, forms.ModelForm):
         }
 
 
-class MessageForm(forms.ModelForm):
+class MessageForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Message
-        fields = '__all__'
+        fields = ['title', 'body']
 
 
 class MailingForm(StyleFormMixin, forms.ModelForm):
+
     class Meta:
         model = Mailing
-        fields = ['name', 'message', 'client', 'frequency', 'datetime_first_mailing', 'end_datetime']
+        fields = ['name', 'message', 'client', 'frequency', 'datetime_first_mailing', 'end_datetime', 'is_active']
+
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+        if user: # Фильтруем сообщения и клиентов по владельцу
+            self.fields['message'].queryset = Message.objects.filter(owner=user)
+            self.fields['client'].queryset = Client.objects.filter(owner=user)
+
 
     def clean_name(self):
         name = self.cleaned_data.get('name')
-        if Mailing.objects.filter(name=name).exists():
+        queryset = Mailing.objects.filter(name=name)
+
+        if self.instance.pk:
+            queryset = queryset.exclude(pk=self.instance.pk)
+        if queryset.exists():
             raise forms.ValidationError("Рассылка с таким названием уже существует. Придумайте другое название.")
+
         return name
 
 
@@ -52,6 +69,3 @@ class MailingForm(StyleFormMixin, forms.ModelForm):
             self.add_error("end_datetime", "Для периодической рассылки необходимо указать дату окончания.")
 
         return cleaned_data
-
-
-

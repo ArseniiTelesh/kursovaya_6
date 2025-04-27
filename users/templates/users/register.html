@@ -1,0 +1,25 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center flex-column align-items-center">
+    <form method="post" enctype="multipart/form-data" class="w-50">
+        {% csrf_token %}
+
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Регистрация</h4>
+            </div>
+
+            <div class="card-body">
+                {{ form.as_p }}
+            </div>
+
+        <button type="submit" class="btn btn-success mt-3 w-100">
+            Зарегистрироваться
+        </button>
+
+    </form>
+</div>
+
+{% endblock %}

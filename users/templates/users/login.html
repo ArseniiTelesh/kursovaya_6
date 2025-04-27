@@ -1,0 +1,30 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center flex-column align-items-center">
+    <form method="post" enctype="multipart/form-data" class="w-50">
+        {% csrf_token %}
+
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Авторизация</h4>
+            </div>
+
+            <div class="card-body">
+                {{ form.as_p }}
+            </div>
+
+            <div class="card-footer text-center">
+                <a class="text-muted d-block mt-2" href="#">Забыли пароль?</a>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3 w-100">
+            Войти
+        </button>
+
+    </form>
+</div>
+
+{% endblock %}
