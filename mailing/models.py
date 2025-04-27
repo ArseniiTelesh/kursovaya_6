@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.timezone import now
 
+from users.models import User
+
 NULLABLE = {"null": True, "blank": True}
 
 PERIODICITY_CHOICES = [
@@ -27,6 +29,8 @@ class Client(models.Model):
     comment = models.TextField(verbose_name='сообщение', **NULLABLE)
     is_active = models.BooleanField(default=True, verbose_name='активен')
 
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, **NULLABLE, verbose_name='пользователь')
+
     class Meta:
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
@@ -42,6 +46,8 @@ class Message(models.Model):
     """
     title = models.CharField(max_length=300, verbose_name='Тема сообщения')
     body = models.TextField(verbose_name='Текст сообщения')
+
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, **NULLABLE, verbose_name='пользователь')
 
     class Meta:
         verbose_name = 'Сообщение'
@@ -64,11 +70,20 @@ class Mailing(models.Model):
     frequency = models.CharField(max_length=150, verbose_name='Периодичность рассылки', choices=PERIODICITY_CHOICES, default='once')
     status = models.CharField(max_length=150, verbose_name='Статус рассылки', choices=STATUS_MAILING, default='created')
     last_sent = models.DateTimeField(verbose_name='Последняя отправка', **NULLABLE)
+    is_active = models.BooleanField(default=False, verbose_name='активна')
+
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, **NULLABLE, verbose_name='пользователь')
 
     class Meta:
         verbose_name = 'Рассылка'
         verbose_name_plural = 'Рассылки'
+        permissions = [
+            ("can_view_mailing", "Может просматривать рассылки"),
+            ("can_disable_mailing", "Может отключать рассылку"),
+        ]
 
+    def __str__(self):
+        return self.name
 
 class MailingAttempt(models.Model):
     """
@@ -79,6 +94,8 @@ class MailingAttempt(models.Model):
     datetime_last_mailing = models.DateTimeField(verbose_name='Дата и время последней отправки рассылки')
     status_attempt = models.BooleanField(verbose_name='Статус', default=False)
     server_answer = models.CharField(verbose_name='ответ почтового сервера', **NULLABLE)
+
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, **NULLABLE, verbose_name='пользователь')
 
     class Meta:
         verbose_name = 'Попытка рассылки'

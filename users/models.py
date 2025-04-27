@@ -1,15 +1,30 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
-class User(models.Model):
+NULLABLE = {"blank": True, "null": True}
+
+class User(AbstractUser):
     """
-    Модель пользователя (создающего рассылки)
+    Модель пользователя
     """
-    name = models.CharField(max_length=150, verbose_name='Имя пользователя')
-    email = models.EmailField(max_length=200, verbose_name='Электронная почта')
+    username = None
+
+    email = models.EmailField(unique=True, verbose_name='почта')
+    phone_number = PhoneNumberField(verbose_name='Номер телефона', **NULLABLE)
+    avatar = models.ImageField(upload_to='users/', verbose_name='аватар', **NULLABLE)
+
+    token = models.CharField(max_length=100, verbose_name='Token', **NULLABLE)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+        permissions = [
+            ("can_block_user", "Может заблокировать пользователя"),
+        ]
 
     def __str__(self):
-        return f"{self.name}, ({self.email})"
+        return f"{self.email}"

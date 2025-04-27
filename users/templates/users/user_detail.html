@@ -1,0 +1,29 @@
+{% extends 'mailing/base.html' %}
+
+{% load my_tags %}
+
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                <div class="card-body d-flex flex-column align-items-start">
+                    <h3 class="mb-0 fw-normal">Email: {{object.email}}</h3>
+                    <h3 class="mb-1 text-muted">Телефон: {{object.phone}}</h3>
+                    <h3 class="card-title pricing-card-title">Страна: {{object.country}} </h3>
+                    <ul class="list-unstyled mt-3 mb-4">???</ul>
+                </div>
+                <img class="card-img-right flex-auto d-none d-md-block"
+                     src="{% images_tag object.avatar %}"
+                     alt="Вам кажется, что тут нет картинки, но она на самом деле есть">
+            </div>
+        </div>
+        <div class="btn-group">
+            <a href="#"
+               class="btn btn-lg btn-block btn-outline-primary">Редактировать</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
